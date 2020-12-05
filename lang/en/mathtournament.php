@@ -21,8 +21,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['already_in_race'] = 'You are already participant in this race!';
+
+$string['joined_race'] = 'You joined this race!';
+
+$string['mathtournament:addinstance'] = 'Add a new Math Tournament';
+$string['mathtournament:view'] = 'Open Math Tournament';
+
+$string['modulename'] = 'Math Tournament';
 $string['modulename_link'] = 'mod/mathtournament/view';
 $string['modulenameplural'] = 'Math Tournaments';
+
+$string['no_place_left_in_race'] = 'Sorry, maximum amounts of participants in race reached!';
 
 $string['pluginadministration'] = 'Math Tournament module administration';
 $string['pluginname'] = 'Math Tournament';
@@ -30,5 +40,5 @@ $string['printintro'] = 'Display Tournament description';
 $string['printintroexplain'] = 'Display Tournament description below content? Some display types may not display description even if enabled.';
 $string['privacy:metadata'] = 'The Math Tournament plugin does not store any personal data.';
 
-$string['mathtournament:addinstance'] = 'Add a new Math Tournament';
-$string['mathtournament:view'] = 'Open Math Tournament';
+$string['races_in_tournament'] = 'Races in this tournament';
+$string['resigned_from_race'] = 'You resigned from this race!';

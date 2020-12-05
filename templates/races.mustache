@@ -1,0 +1,64 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+}}
+
+<div id="mod_mathtournament" class="races">
+    <h3>{{#str}} races_in_tournament, mathtournament {{/str}}</h3>
+    <table class="generaltable">
+    {{#races}}
+        <tr class="race-{{id}}">
+            <td>{{nr}}</td>
+            <td>
+                <table class="generaltable">
+                {{#scores}}
+                    <tr class="race-{{raceid}}-user-{{userid}}">
+                        <td>{{firstname}}</td>
+                        <td>{{lastname}}</td>
+                        <td>
+                            {{#btnjoin}}
+                                <a href="{{baseurl}}&join={{id}}" class="btn btn-primary btn-block">
+                                    join
+                                </a>
+                            {{/btnjoin}}
+                            {{#btnresign}}
+                                <a href="{{baseurl}}&resign={{id}}" class="btn btn-primary btn-block">
+                                    resign
+                                </a>
+                            {{/btnresign}}
+                        </td>
+                        <td>
+                            {{#isonline}}
+                                <span class="online">online</span>
+                            {{/isonline}}
+                            {{#isoffline}}
+                                <span class="offline">offline</span>
+                            {{/isoffline}}
+                        </td>
+                    </tr>
+                {{/scores}}
+                </table>
+            </td>
+        </tr>
+    {{/races}}
+    </table>
+
+    <a href="{{baseurl}}&action=startrace" class="btn btn-primary">
+        Start new race
+    </a>
+
+
+</div>
