@@ -1,0 +1,97 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+}}
+
+<div id="mod_mathtournament_race">
+    <!-- Display controls -->
+    {{#players}}
+        <!-- Display one track per player -->
+    {{/players}}
+
+
+</div>
+
+
+<div class="player" data-player="1">
+      <div class="level">
+              <ul data-role="listview" data-inset="true">
+                   <li class="row row-level-0-1" data-icon="false">
+                        <a href="#" onclick="game.setLevel(1,0);">
+                             <span>+</span>
+                             <span id="pnt-0-1">0</span>
+                             <span id="cnt-0-1">0</span>
+                        </a>
+                   </li>
+                   <li class="row row-level-1-1" data-icon="false">
+                        <a href="#" onclick="game.setLevel(1,1);">
+                             <span>-</span>
+                             <span id="pnt-1-1">0</span>
+                             <span id="cnt-1-1">0</span>
+                        </a>
+                   </li>
+                   <li class="row row-level-2-1" data-icon="false">
+                        <a href="#" onclick="game.setLevel(1,2);">
+                             <span>*</span>
+                             <span id="pnt-2-1">0</span>
+                             <span id="cnt-2-1">0</span>
+                        </a>
+                   </li>
+                   <li class="row row-level-3-1" data-icon="false">
+                        <a href="#" onclick="game.setLevel(1,3);">
+                             <span>/</span>
+                             <span id="pnt-3-1">0</span>
+                             <span id="cnt-3-1">0</span>
+                        </a>
+                   </li>
+                   <li class="row" data-icon="false">
+                        <a href="#">
+                             <span>Boost</span>
+                             <span id="pnt-boo-1">0</span>
+                             <span id="cnt-boo-1">0</span>
+                        </a>
+                   </li>
+                   <li class="row" data-icon="false">
+                        <a href="#">
+                             <span onclick="ad.show();">Points</span>
+                             <span id="pnt-all-1">0</span>
+                        </a>
+                   </li>
+              </ul>
+      </div>
+      <div class="quest">Driven by Logic</div>
+      <div class="choices">
+          <!--
+          <a data-choice="0" data-role="button" onclick="game.click(this)"></a>
+          <a data-choice="1" data-role="button" onclick="game.click(this)"></a>
+          <a data-choice="2" data-role="button" onclick="game.click(this)"></a>
+          <a data-choice="3" data-role="button" onclick="game.click(this)"></a>
+          -->
+            <div class="btn" data-choice="0" onclick="game.click(this)">&nbsp;</div>
+            <div class="btn" data-choice="1" onclick="game.click(this)">&nbsp;</div>
+            <div class="btn" data-choice="2" onclick="game.click(this)">&nbsp;</div>
+            <div class="btn" data-choice="3" onclick="game.click(this)">&nbsp;</div>
+      </div>
+      <div class="car-select">
+      </div>
+      <!--
+      <div class="correct"></div>
+      <div class="wrong"></div>
+      -->
+      <div class="popup-wrapper">
+          <div class="popup"></div>
+      </div>
+</div>
