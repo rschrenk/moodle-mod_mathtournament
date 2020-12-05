@@ -154,77 +154,25 @@ function mathtournament_delete_instance($id) {
  * @param object $coursemodule
  * @return cached_cm_info info
  */
-function msteams_get_coursemodule_info($coursemodule) {
+function mathtournament_get_coursemodule_info($coursemodule) {
     global $CFG, $DB;
-    require_once("$CFG->dirroot/mod/url/locallib.php");
 
-    if (!$msteam = $DB->get_record('msteams', array('id'=>$coursemodule->instance),
-            'id, name, externalurl, intro, introformat')) {
+    if (!$mt = $DB->get_record('mathtournament', array('id'=>$coursemodule->instance),
+            'id, name, intro, introformat')) {
         return NULL;
     }
 
     $info = new cached_cm_info();
-    $info->name = $msteam->name;
+    $info->name = $mt->name;
 
-    //note: there should be a way to differentiate links from normal resources
-    $info->icon = url_guess_icon($msteam->externalurl, 24);
-
-    $fullurl = "$CFG->wwwroot/mod/msteams/view.php?id=$coursemodule->id&amp;redirect=1";
-    $info->onclick = "window.open('$fullurl'); return false;";
+    $fullurl = "$CFG->wwwroot/mod/mathtournament/view.php?id=$coursemodule->id";
 
     if ($coursemodule->showdescription) {
         // Convert intro to html. Do not filter cached version, filters run at display time.
-        $info->content = format_module_intro('msteams', $msteam, $coursemodule->id, false);
+        $info->content = format_module_intro('mathtournament', $mt, $coursemodule->id, false);
     }
 
     return $info;
-}
-
-/**
- * Return a list of page types
- * @param string $pagetype current page type
- * @param stdClass $parentcontext Block's parent context
- * @param stdClass $currentcontext Current context of block
- */
-function msteams_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $module_pagetype = array('mod-msteams-*'=>get_string('page-mod-msteams-x', 'msteams'));
-    return $module_pagetype;
-}
-
-/**
- * Export MS Teams resource contents
- *
- * @return array of file content
- */
-function msteams_export_contents($cm, $baseurl) {
-    global $CFG, $DB;
-    require_once("$CFG->dirroot/mod/url/locallib.php");
-    $contents = array();
-    $context = context_module::instance($cm->id);
-
-    $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
-    $msteamsrecord = $DB->get_record('msteams', array('id'=>$cm->instance), '*', MUST_EXIST);
-
-    $fullurl = $msteamsrecord->externalurl;
-    if (empty($fullurl)) {
-        return null;
-    }
-
-    $msteam = array();
-    $msteam['type'] = 'url';
-    $msteam['filename']     = clean_param(format_string($msteamsrecord->name), PARAM_FILE);
-    $msteam['filepath']     = null;
-    $msteam['filesize']     = 0;
-    $msteam['fileurl']      = $fullurl;
-    $msteam['timecreated']  = null;
-    $msteam['timemodified'] = $msteamsrecord->timemodified;
-    $msteam['sortorder']    = null;
-    $msteam['userid']       = null;
-    $msteam['author']       = null;
-    $msteam['license']      = null;
-    $contents[] = $msteam;
-
-    return $contents;
 }
 
 /**
@@ -236,18 +184,18 @@ function msteams_export_contents($cm, $baseurl) {
  * @param  stdClass $context    context object
  * @since Moodle 3.0
  */
-function msteams_view($msteam, $course, $cm, $context) {
+function mathtournament_view($mt, $course, $cm, $context) {
 
     // Trigger course_module_viewed event.
     $params = array(
         'context' => $context,
-        'objectid' => $msteam->id
+        'objectid' => $mt->id
     );
 
-    $event = \mod_msteams\event\course_module_viewed::create($params);
+    $event = \mod_mathtournament\event\course_module_viewed::create($params);
     $event->add_record_snapshot('course_modules', $cm);
     $event->add_record_snapshot('course', $course);
-    $event->add_record_snapshot('msteams', $msteam);
+    $event->add_record_snapshot('mathtournament', $mt);
     $event->trigger();
 
     // Completion.
@@ -264,7 +212,7 @@ function msteams_view($msteam, $course, $cm, $context) {
  * @return stdClass an object with the different type of areas indicating if they were updated or not
  * @since Moodle 3.2
  */
-function msteams_check_updates_since(cm_info $cm, $from, $filter = array()) {
+function mathtournament_check_updates_since(cm_info $cm, $from, $filter = array()) {
     $updates = course_check_module_updates_since($cm, $from, array('content'), $filter);
     return $updates;
 }
@@ -280,7 +228,7 @@ function msteams_check_updates_since(cm_info $cm, $from, $filter = array()) {
  * @param int $userid ID override for calendar events
  * @return \core_calendar\local\event\entities\action_interface|null
  */
-function mod_msteams_core_calendar_provide_event_action(calendar_event $event,
+function mathtournament_core_calendar_provide_event_action(calendar_event $event,
                                                        \core_calendar\action_factory $factory, $userid = 0) {
 
     global $USER;
@@ -288,7 +236,7 @@ function mod_msteams_core_calendar_provide_event_action(calendar_event $event,
         $userid = $USER->id;
     }
 
-    $cm = get_fast_modinfo($event->courseid, $userid)->instances['msteams'][$event->instance];
+    $cm = get_fast_modinfo($event->courseid, $userid)->instances['mathtournament'][$event->instance];
 
     $completion = new \completion_info($cm->get_course());
 
@@ -300,7 +248,7 @@ function mod_msteams_core_calendar_provide_event_action(calendar_event $event,
 
     return $factory->create_instance(
         get_string('view'),
-        new \moodle_url('/mod/msteams/view.php', ['id' => $cm->id]),
+        new \moodle_url('/mod/mathtournament/view.php', ['id' => $cm->id]),
         1,
         true
     );
