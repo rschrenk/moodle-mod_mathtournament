@@ -33,7 +33,7 @@
             <FIELDS>
               <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
               <FIELD NAME="tournamentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-              <FIELD NAME="raceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+              <FIELD NAME="raceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
               <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
               <FIELD NAME="points" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
               <FIELD NAME="payload" TYPE="text" NOTNULL="true" DEFAULT="{}" />
