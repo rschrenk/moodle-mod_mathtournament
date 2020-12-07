@@ -19,12 +19,21 @@
  * @package    mod_mathtournament
  * @copyright  2020 Robert Schrenk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * 1. Perform actions
+ * 1.1 start a race (and join immediatley)
+ * 1.2 join a race
+ * 1.3 resign from a race
+ * 2. If user is in a race, redirect to race page
+ * 3. If user is not in a race, show list of races
  */
+
 
 require('../../config.php');
 
 // Should be autoloaded, but did not work...
 require_once($CFG->dirroot . '/mod/mathtournament/classes/locallib.php');
+require_once($CFG->dirroot . '/mod/mathtournament/classes/operation.php');
 require_once($CFG->libdir . '/completionlib.php');
 
 $id       = optional_param('id', 0, PARAM_INT);        // Course module ID
@@ -55,7 +64,9 @@ $PAGE->set_pagelayout('incourse');
 
 \mod_mathtournament\locallib::set_lastseen();
 
-echo $OUTPUT->header();
+$msgs = array(); // Array to store alert messages.
+
+// SECTION 1: perform actions.
 
 if (!empty($action)) {
     switch ($action) {
@@ -68,7 +79,11 @@ if (!empty($action)) {
             );
             // By setting $join to the new id, the user immediatley joins.
             $race->id = $DB->insert_record('mathtournament_races', $race);
-            \mod_mathtournament\locallib::join_race($mt, $race->id);
+            $score = \mod_mathtournament\locallib::join_race($mt, $race->id);
+            $redirected = \mod_mathtournament\locallib::redirect_to_race($mt, $race, $score);
+            if ($redirected) {
+                $msgs[] = $OUTPUT->render_from_template('mathtournament/alert', array('type' => 'success', 'content' => get_string('redirect_to_race', 'mathtournament')));
+            }
         break;
     }
 }
@@ -80,12 +95,12 @@ if (!empty($join)) {
         if (empty($myscore->id)) {
             $score = \mod_mathtournament\locallib::join_race($mt, $race->id);
             if (!empty($score->id)) {
-                echo $OUTPUT->render_from_template('mathtournament/alert', array('type' => 'success', 'content' => get_string('joined_race', 'mathtournament')));
+                $msgs[] = $OUTPUT->render_from_template('mathtournament/alert', array('type' => 'success', 'content' => get_string('joined_race', 'mathtournament')));
             } else {
-                echo $OUTPUT->render_from_template('mathtournament/alert', array('type' => 'danger', 'content' => get_string('no_place_left_in_race', 'mathtournament')));
+                $msgs[] = $OUTPUT->render_from_template('mathtournament/alert', array('type' => 'danger', 'content' => get_string('no_place_left_in_race', 'mathtournament')));
             }
         } else {
-            echo $OUTPUT->render_from_template('mathtournament/alert', array('type' => 'warning', 'content' => get_string('already_in_race', 'mathtournament')));
+            $msgs[] = $OUTPUT->render_from_template('mathtournament/alert', array('type' => 'warning', 'content' => get_string('already_in_race', 'mathtournament')));
         }
     }
 }
@@ -93,14 +108,33 @@ if (!empty($join)) {
 if (!empty($resign)) {
     $oldscore = \mod_mathtournament\locallib::resign_from_race($resign);
     if (!empty($oldscore)) {
-        echo $OUTPUT->render_from_template('mathtournament/alert', array('type' => 'success', 'content' => get_string('resigned_from_race', 'mathtournament')));
+        $msgs[] = $OUTPUT->render_from_template('mathtournament/alert', array('type' => 'success', 'content' => get_string('resigned_from_race', 'mathtournament')));
     }
+}
+
+// 2. Check if we are in a race.
+$score = $DB->get_record('mathtournament_scores', array('timefinished' => 0, 'userid' => $USER->id));
+if (!empty($score->id)) {
+    // We are currently in a race (may also be from another tournament...)!
+    $race = $DB->get_record('mathtournament_races', array('id' => $score->raceid), '*', MUST_EXIST);
+    $redirected = \mod_mathtournament\locallib::redirect_to_race($mt, $race, $score);
+    if ($redirected) {
+        $msgs[] = $OUTPUT->render_from_template('mathtournament/alert', array('type' => 'success', 'content' => get_string('redirect_to_race', 'mathtournament')));
+    }
+}
+
+// 3. Show list of races.
+
+echo $OUTPUT->header();
+if (count($msgs) > 0) {
+    echo implode("\n", $msgs);
 }
 
 $races = array_values($DB->get_records('mathtournament_races', array('tournamentid' => $mt->id, 'timefinished' => 0)));
 $i = 1;
 $tscompare = time()-5;
 foreach ($races as &$race) {
+    $race->raceid = $race->id;
     $race->nr = $i++;
     $sql = "SELECT mts.*,u.firstname,u.lastname
                 FROM {mathtournament_scores} mts, {user} u
@@ -112,7 +146,6 @@ foreach ($races as &$race) {
         $score->isonline = ($tscompare < $score->timelastseen) ? 1 : 0;
         $score->isoffline = ($score->isonline) ? 0 : 1;
         if ($score->userid == $USER->id) {
-            $race->btnresign = 1;
             $race->btnjoin = 0;
         }
 

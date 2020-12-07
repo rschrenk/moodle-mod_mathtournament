@@ -41,4 +41,6 @@ $string['printintroexplain'] = 'Display Tournament description below content? So
 $string['privacy:metadata'] = 'The Math Tournament plugin does not store any personal data.';
 
 $string['races_in_tournament'] = 'Races in this tournament';
+$string['redirect_to_race'] = 'Redirecting you to your race!';
+$string['resign'] = 'resign';
 $string['resigned_from_race'] = 'You resigned from this race!';

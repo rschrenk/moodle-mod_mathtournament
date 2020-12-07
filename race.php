@@ -31,12 +31,14 @@ $race = $DB->get_record('mathtournament_races', array('id'=>$id), '*', MUST_EXIS
 $mt = $DB->get_record('mathtournament', array('id'=>$race->tournamentid), '*', MUST_EXIST);
 $course = $DB->get_record('course', array('id'=>$mt->course), '*', MUST_EXIST);
 
+$cm = get_coursemodule_from_instance('mathtournament', $mt->id, $mt->course, false, MUST_EXIST);
+
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/mathtournament:view', $context);
 
 // Completion and trigger events.
-mathtournament_view($mt, $course, $cm, $context);
+//mathtournament_view($mt, $course, $cm, $context);
 
 $PAGE->set_title($mt->name);
 $PAGE->set_heading($mt->name);
@@ -44,8 +46,20 @@ $PAGE->set_url('/mod/mathtournament/race.php', array('id' => $id));
 $PAGE->set_pagelayout('incourse');
 $PAGE->requires->css('/mod/mathtournament/style/main.css');
 
+$score = $DB->get_record('mathtournament_scores', array('raceid' => $id, 'userid' => $USER->id, 'timefinished' => 0));
+
+if (empty($score->id)) {
+    // We are in no race. Redirect to tournament.
+    $url = new \moodle_url('/mod/mathtournament/view.php', array('id' => $mt->id));
+    redirect($url);
+}
+
 echo $OUTPUT->header();
 
-echo $OUTPUT->render_from_template('mod_mathtournament/race', array());
+$score->user = $USER;
+$score->players = array_values($DB->get_records('mathtournament_scores', array('raceid' => $id)));
+$score->players_amount = count($score->players);
+$score->wwwroot = $CFG->wwwroot;
+echo $OUTPUT->render_from_template('mod_mathtournament/race', $score);
 
 echo $OUTPUT->footer();

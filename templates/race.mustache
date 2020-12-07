@@ -17,6 +17,21 @@
 }}
 
 <div id="mod_mathtournament_race">
+    <table style="width: 100%;">
+        <tr>
+            <td width="80">
+                <a href="{{wwwroot}}/mod/mathtournament/view.php?t={{tournamentid}}&resign={{raceid}}" class="btn btn-primary">
+                    {{#str}} resign, mod_mathtournament {{/str}}
+                </a>
+            </td>
+            <td class="points" align="center">{{points}}</td>
+            <td class="players" width="80" align="right">
+                <a href="#" class="btn btn-primary">
+                    {{players_amount}}
+                </a>
+            </td>
+        </tr>
+    </table>
     <!-- Display controls -->
     {{#players}}
         <!-- Display one track per player -->
@@ -25,7 +40,7 @@
 
 </div>
 
-
+<!--
 <div class="player" data-player="1">
       <div class="level">
               <ul data-role="listview" data-inset="true">
@@ -74,12 +89,6 @@
       </div>
       <div class="quest">Driven by Logic</div>
       <div class="choices">
-          <!--
-          <a data-choice="0" data-role="button" onclick="game.click(this)"></a>
-          <a data-choice="1" data-role="button" onclick="game.click(this)"></a>
-          <a data-choice="2" data-role="button" onclick="game.click(this)"></a>
-          <a data-choice="3" data-role="button" onclick="game.click(this)"></a>
-          -->
             <div class="btn" data-choice="0" onclick="game.click(this)">&nbsp;</div>
             <div class="btn" data-choice="1" onclick="game.click(this)">&nbsp;</div>
             <div class="btn" data-choice="2" onclick="game.click(this)">&nbsp;</div>
@@ -87,11 +96,8 @@
       </div>
       <div class="car-select">
       </div>
-      <!--
-      <div class="correct"></div>
-      <div class="wrong"></div>
-      -->
       <div class="popup-wrapper">
           <div class="popup"></div>
       </div>
 </div>
+-->

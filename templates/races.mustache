@@ -29,12 +29,6 @@
                     join
                 </a>
                 {{/btnjoin}}
-                {{#btnstart}}
-                <br />
-                <a href="{{baseurl}}&start={{raceid}}" class="btn btn-primary btn-block">
-                    start
-                </a>
-                {{/btnstart}}
             </td>
             <td>
                 <table class="generaltable">
@@ -42,6 +36,7 @@
                     <tr class="race-{{raceid}}-user-{{userid}}">
                         <td>{{firstname}}</td>
                         <td>{{lastname}}</td>
+                        <td>{{points}} / 100</td>
                         <td>
                             {{#isonline}}
                                 <span class="online">online</span>
@@ -49,13 +44,6 @@
                             {{#isoffline}}
                                 <span class="offline">offline</span>
                             {{/isoffline}}
-                        </td>
-                        <td>
-                            {{#btnresign}}
-                                <a href="{{baseurl}}&resign={{raceid}}" class="btn btn-primary">
-                                    resign
-                                </a>
-                            {{/btnresign}}
                         </td>
                     </tr>
                 {{/scores}}

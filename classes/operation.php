@@ -24,23 +24,40 @@ namespace mod_mathtournament;
 
 defined('MOODLE_INTERNAL') || die;
 
-class locallib {
-    public static function join_race($mt, $raceid, $userid = 0) {
+class operation {
+    const OPERATION_ADD = 0;
+    const OPERATION_SUBSTRACT = 1;
+    const OPERATION_MULTIPLY = 2;
+    const OPERATION_DIVIDE = 3;
+
+    // configure the points per operation here.
+    const points = array(
+        1, // OPERATION_ADD
+        2, // OPERATION_SUBSTRACT
+        3, // OPERATION_MULTIPLY
+        4, // OPERATION_DIVIDE
+    );
+
+    public static function create($mt, $raceid, $operationtype, $userid = 0) {
         global $DB, $USER;
+        // check validity of operationtype by determining its ponits.
+        if (empty(self::points[$operationtype])) {
+            return;
+        }
         if ($userid == 0) {
             $userid = $USER->id;
         }
-        $score = (object) array(
-            'carcolor' => 'red', // @todo randomize colors.
-            'points' => 0,
+
+        $operation = (object) array(
+            'operationtype' => $operationtype,
             'raceid' => $raceid,
-            'timejoined' => 0,
-            'timelastseen' => 0,
+            'timecreated' => time(),
+            'timesolved' => 0,
             'tournamentid' => $mt->id,
             'userid' => $userid,
         );
-        $score->id = $DB->insert_record('mathtournament_scores', $score);
-        return $score;
+        $operation->id = $DB->insert_record('mathtournament_operations', $operation);
+        return $operation;
     }
     public static function redirect_to_race($mt, $race, $score = "") {
         global $DB, $USER;
